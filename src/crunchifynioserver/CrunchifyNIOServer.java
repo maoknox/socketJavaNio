@@ -37,7 +37,7 @@ import java.util.logging.SimpleFormatter;
  * @author Crunchify.com
  *
  */
- 
+
 public class CrunchifyNIOServer {
     static Map<String, HashMap<String, String>> comandos = Collections.synchronizedMap(new HashMap());
     static Connection conect;

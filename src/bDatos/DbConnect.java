@@ -18,7 +18,6 @@ import java.util.logging.SimpleFormatter;
  * @author USER
  */
 public class DbConnect {
-
  String driver = "org.postgresql.Driver"; // el nombre de nuestro driver Postgres.
 //    String connectString = "jdbc:postgresql://ec2-174-129-242-241.compute-1.amazonaws.com:5432/d1b9pv88jl26t9?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"; // llamamos         
 //    String user = "ajrbjyuywyluwm"; // usuario postgres
