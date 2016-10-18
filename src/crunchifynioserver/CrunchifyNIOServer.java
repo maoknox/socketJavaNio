@@ -39,7 +39,7 @@ import java.util.logging.SimpleFormatter;
  */
 
 public class CrunchifyNIOServer {
-    static Map<String, HashMap<String, String>> comandos = Collections.synchronizedMap(new HashMap());
+    static Map<String, HashMap<String, String>> comandos = Collections.synchronizedMap(new HashMap<String, HashMap<String, String>>());
     static Connection conect;
     static DbConnect con = new DbConnect();;
     static SimpleFormatter formatter = new SimpleFormatter();;
@@ -49,7 +49,7 @@ public class CrunchifyNIOServer {
     //static SocketChannel crunchifyClient;
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException{
-            FileHandler fh = new FileHandler("C:/javaprog/LogFile.log", true);
+            FileHandler fh = new FileHandler("/javaprog/LogFile.log", true);
 //            if (args.length < 2) {
 //                logger.addHandler(fh);
 //                fh.setFormatter(formatter);
@@ -57,11 +57,11 @@ public class CrunchifyNIOServer {
 //                System.exit(1);
 //            }
             Selector selector = Selector.open();
-            //int port = Integer.valueOf(args[0]);
-           //String address = args[1];
+            int port = Integer.valueOf(args[0]);
+            //String address = args[1];
             try {
                 crunchifySocket = ServerSocketChannel.open();
-                crunchifyAddr = new InetSocketAddress("192.168.0.101", 8010);
+                crunchifyAddr = new InetSocketAddress("172.31.27.242", port);
                 crunchifySocket.bind(crunchifyAddr);
             }
             catch (UnresolvedAddressException e) {
@@ -107,12 +107,12 @@ public class CrunchifyNIOServer {
                                         String[] tramaSplit = result.substring(0, result.length()).split(",");
                                         if ("!C".equals(tramaSplit[0])) {
                                             if (!comandos.containsKey(tramaSplit[1])) {
-                                                comandos.put(tramaSplit[1], new HashMap());
+                                                comandos.put(tramaSplit[1], new HashMap<>());
                                             }
                                             comandos.get(tramaSplit[1]).put(tramaSplit[0], result);
                                         } else if ("!N".equals(tramaSplit[0])) {
                                             if (!comandos.containsKey(tramaSplit[1])) {
-                                                comandos.put(tramaSplit[1], new HashMap());
+                                                comandos.put(tramaSplit[1], new HashMap<>());
                                             }
                                             comandos.get(tramaSplit[1]).put(tramaSplit[0], result);
                                         } else {
