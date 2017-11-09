@@ -58,13 +58,13 @@ public class CrunchifyNIOServer {
 //            }
             
             Selector selector = Selector.open();
-            int port = Integer.valueOf(args[0]);
-//            int port = Integer.valueOf("8010");
+//            int port = Integer.valueOf(args[0]);
+            int port = Integer.valueOf("8010");
             //String address = args[1];
             try {
                 crunchifySocket = ServerSocketChannel.open();//172.31.27.242
-                crunchifyAddr = new InetSocketAddress("172.31.27.242", port);
-//                crunchifyAddr = new InetSocketAddress("192.168.43.145", port);
+//                crunchifyAddr = new InetSocketAddress("172.31.27.242", port);
+                crunchifyAddr = new InetSocketAddress("192.168.0.5", port);
                 crunchifySocket.bind(crunchifyAddr);
             }
             catch (UnresolvedAddressException e) {
