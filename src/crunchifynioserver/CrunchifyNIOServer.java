@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
@@ -27,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
@@ -49,7 +51,7 @@ public class CrunchifyNIOServer {
     //static SocketChannel crunchifyClient;
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException{
-            FileHandler fh = new FileHandler("/javaprog/LogFile.log", true);
+            FileHandler fh = new FileHandler("/var/sockets/LogFile.log", true);
 //            if (args.length < 2) {
 //                logger.addHandler(fh);
 //                fh.setFormatter(formatter);
@@ -58,13 +60,13 @@ public class CrunchifyNIOServer {
 //            }
             
             Selector selector = Selector.open();
-//            int port = Integer.valueOf(args[0]);
-            int port = Integer.valueOf("8010");
-            //String address = args[1];
+            int port = Integer.valueOf(args[0]);
+//            int port = Integer.valueOf("8010");
+            String address = args[1];
             try {
                 crunchifySocket = ServerSocketChannel.open();//172.31.27.242
 //                crunchifyAddr = new InetSocketAddress("172.31.27.242", port);
-                crunchifyAddr = new InetSocketAddress("192.168.0.5", port);
+                crunchifyAddr = new InetSocketAddress(address, port);
                 crunchifySocket.bind(crunchifyAddr);
             }
             catch (UnresolvedAddressException e) {
@@ -77,7 +79,7 @@ public class CrunchifyNIOServer {
             crunchifySocket.configureBlocking(false);
             int ops = crunchifySocket.validOps();
             SelectionKey selectKy = crunchifySocket.register(selector, ops, null);
-            conect = con.conecta();
+            conect = con.conecta();            
             if (conect == null) {
                 System.exit(1);
             }
@@ -159,23 +161,28 @@ public class CrunchifyNIOServer {
                                                     fh.setFormatter(formatter);
                                                     logger.info(ex.getMessage());
                                                 }
-                                                Date date = new Date();
-                                                long time = date.getTime();
-                                                Timestamp fechaRegistro = new Timestamp(time);
+                                                Date currentTime = new Date();
+                                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+
+                                                // Give it to me in GMT time.
+                                                sdf.setTimeZone(TimeZone.getTimeZone("GMT-5"));
+                                                Timestamp fechaRegistro = Timestamp.valueOf(sdf.format(currentTime));
                                                 String str1 = Arrays.toString(tramaSplit);
                                                 str1 = str1.substring(1, str1.length() - 1).replaceAll(" ", "");
                                                 String[] parts = str1.split(",");
                                                 String[] magnitude=Arrays.copyOfRange(parts, 4, parts.length);
-                                                String str2= Arrays.toString(magnitude);
-                                                str2=str2.substring(1, str2.length() - 1).replaceAll(" ", "");
-//                                                System.arraycopy(parts, 3, magnitude, 0, parts.length-1);
-                                                String dataTest = "INSERT INTO dataframe (id_entdev,dataframe,dataframe_date) values (?,?,?);";
-                                                try (PreparedStatement prepStmt = conect.prepareStatement(dataTest)) {
-                                                    prepStmt.setInt(1, idEntdev);
-                                                    prepStmt.setString(2,str2);
-                                                    prepStmt.setTimestamp(3, fechaRegistro);
-                                                    prepStmt.execute();
-                                                    prepStmt.close();
+                                                if(magnitude.length!=0){
+                                                    String str2= Arrays.toString(magnitude);
+                                                    str2=str2.substring(1, str2.length() - 1).replaceAll(" ", "");
+    //                                                System.arraycopy(parts, 3, magnitude, 0, parts.length-1);
+                                                    String dataTest = "INSERT INTO dataframe (id_entdev,dataframe,dataframe_date) values (?,?,?);";
+                                                    try (PreparedStatement prepStmt = conect.prepareStatement(dataTest)) {
+                                                        prepStmt.setInt(1, idEntdev);
+                                                        prepStmt.setString(2,str2);
+                                                        prepStmt.setTimestamp(3, fechaRegistro);
+                                                        prepStmt.execute();
+                                                        prepStmt.close();
+                                                    }
                                                 }
                                             }
                                             catch (SQLException ex) {

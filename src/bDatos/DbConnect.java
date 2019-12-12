@@ -22,13 +22,13 @@ public class DbConnect {
 //    String connectString = "jdbc:postgresql://ec2-174-129-242-241.compute-1.amazonaws.com:5432/d1b9pv88jl26t9?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory"; // llamamos         
 //    String user = "ajrbjyuywyluwm"; // usuario postgres
 //    String password = "sRVVqYKhD2bdn_qWz6tCYSP71h"; // no tiene password nuestra bd.
-    String connectString = "jdbc:postgresql://localhost:5432/telemed"; // llamamos         
-    String user = "postgres"; // usuario postgres
-    String password = "root"; // no tiene password nuestra bd.
+    String connectString = "jdbc:postgresql://localhost:5432/demo"; // llamamos         
+    String user = "maoknox"; // usuario postgres
+    String password = "Nevulos$"; // no tiene password nuestra bd.
     static final Logger logger = Logger.getLogger("MyLog");
     public Connection conecta() throws ClassNotFoundException, IOException
     {
-        FileHandler fh = new FileHandler("/javaprog/LogFile.log", true);
+        FileHandler fh = new FileHandler("/var/sockets/LogFile.log", true);
         try
         {
             Class.forName(driver);
